@@ -1,533 +1,217 @@
-# StoreApp - Complete Documentation
+# StoreApp
 
-## Table of Contents
-1. [Installation and Setup](#installation-and-setup)
-2. [Project Structure](#project-structure)
-3. [Component Documentation](#component-documentation)
-4. [File Usage](#file-usage)
-5. [Application Flow](#application-flow)
-6. [User Roles and Features](#user-roles-and-features)
-7. [Styling and Theming](#styling-and-theming)
-8. [Database Schema](#database-schema)
+A comprehensive store discovery and rating platform built with Next.js, featuring role-based access control for admins, store owners, and regular users.
 
-## Installation and Setup
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v18.0.0 or higher)
-- npm (v9.0.0 or higher) or yarn (v1.22.0 or higher)
-- Git
+- Node.js 18.0.0 or higher
+- npm 9.0.0 or higher (or yarn 1.22.0+)
+- PostgreSQL database (we recommend [Neon](https://neon.tech))
 
-### Step 1: Clone the Repository
-\`\`\`bash
-git clone https://github.com/yourusername/storeapp.git
-cd storeapp
-\`\`\`
+### Installation
 
-### Step 2: Install Dependencies
-\`\`\`bash
-npm install
-# or
-yarn install
-\`\`\`
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/storeapp.git
+   cd storeapp
+   ```
 
-### Step 3: Set Up Environment Variables
-Create a `.env.local` file in the root directory with the following variables:
-\`\`\`
-DATABASE_URL="postgresql://username:password@localhost:5432/storeapp"
-NEXTAUTH_SECRET="your-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
-\`\`\`
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Step 4: Set Up the Database
-If you're using Neon PostgreSQL:
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/storeapp"
+   NEXTAUTH_SECRET="your-secret-key-here"
+   NEXTAUTH_URL="http://localhost:3000"
+   ```
 
-1. Create an account at [neon.tech](https://neon.tech)
-2. Create a new project
-3. Get your connection string and add it to the DATABASE_URL in your .env.local file
-4. Run the database migrations:
-\`\`\`bash
-npx prisma migrate dev
-\`\`\`
+4. **Set up the database**
+   ```bash
+   npx prisma migrate dev
+   npx prisma generate
+   ```
 
-### Step 5: Run the Development Server
-\`\`\`bash
-npm run dev
-# or
-yarn dev
-\`\`\`
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+Visit [http://localhost:3000](http://localhost:3000) to see your application running.
 
-### Step 6: Build for Production
-\`\`\`bash
-npm run build
-# or
-yarn build
-\`\`\`
+## 📁 Project Structure
 
-To start the production server:
-\`\`\`bash
-npm start
-# or
-yarn start
-\`\`\`
-
-## Project Structure
-
-\`\`\`
+```
 storeapp/
 ├── app/                    # Next.js App Router
-│   ├── admin/              # Admin routes
-│   │   ├── add-store/      # Add store page
-│   │   ├── add-user/       # Add user page
-│   │   └── dashboard/      # Admin dashboard
-│   ├── login/              # Login page
-│   ├── register/           # Registration page
-│   ├── store/              # Store owner routes
-│   │   ├── dashboard/      # Store dashboard
-│   │   └── profile/        # Store profile
-│   ├── user/               # Regular user routes
-│   │   ├── dashboard/      # User dashboard
-│   │   └── profile/        # User profile
-│   ├── layout.tsx          # Root layout
-│   └── page.tsx            # Home page
-├── components/             # Reusable components
-│   ├── layouts/            # Layout components
-│   │   ├── admin-layout.tsx
-│   │   ├── store-layout.tsx
-│   │   └── user-layout.tsx
-│   ├── ui/                 # UI components (shadcn/ui)
-│   ├── data-table.tsx      # Data table component
-│   └── store-card.tsx      # Store card component
-├── hooks/                  # Custom React hooks
-│   ├── use-mobile.tsx      # Mobile detection hook
-│   └── use-toast.ts        # Toast notification hook
-├── lib/                    # Utility functions and libraries
-│   ├── schema.prisma       # Prisma schema
-│   └── utils.ts            # Utility functions
-├── public/                 # Static files
-├── tailwind.config.ts      # Tailwind CSS configuration
-└── next.config.mjs         # Next.js configuration
-\`\`\`
-
-## Component Documentation
-
-### Layout Components
-
-#### `AdminLayout`
-**File:** `components/layouts/admin-layout.tsx`
-
-**Purpose:** Provides the layout structure for admin pages with a sidebar navigation.
-
-**Props:**
-- `children`: React nodes to be rendered within the layout
-
-**Usage:**
-\`\`\`tsx
-import AdminLayout from "@/components/layouts/admin-layout"
-
-export default function AdminPage() {
-  return (
-    <AdminLayout>
-      <div>Admin page content</div>
-    </AdminLayout>
-  )
-}
-\`\`\`
-
-**Features:**
-- Responsive sidebar that collapses on mobile
-- Navigation links to admin sections
-- User profile section
-- Logout functionality
-
-#### `UserLayout`
-**File:** `components/layouts/user-layout.tsx`
-
-**Purpose:** Provides the layout structure for regular user pages.
-
-**Props:**
-- `children`: React nodes to be rendered within the layout
-
-**Usage:**
-\`\`\`tsx
-import UserLayout from "@/components/layouts/user-layout"
-
-export default function UserPage() {
-  return (
-    <UserLayout>
-      <div>User page content</div>
-    </UserLayout>
-  )
-}
-\`\`\`
-
-**Features:**
-- Right-positioned sidebar
-- Navigation links to user sections
-- User profile section
-- Logout functionality
-
-#### `StoreLayout`
-**File:** `components/layouts/store-layout.tsx`
-
-**Purpose:** Provides the layout structure for store owner pages.
-
-**Props:**
-- `children`: React nodes to be rendered within the layout
-
-**Usage:**
-\`\`\`tsx
-import StoreLayout from "@/components/layouts/store-layout"
-
-export default function StorePage() {
-  return (
-    <StoreLayout>
-      <div>Store page content</div>
-    </StoreLayout>
-  )
-}
-\`\`\`
-
-**Features:**
-- Right-positioned sidebar
-- Navigation links to store sections
-- Store profile section
-- Logout functionality
-
-### UI Components
-
-#### `DataTable`
-**File:** `components/data-table.tsx`
-
-**Purpose:** Renders a sortable, paginated table for displaying data.
-
-**Props:**
-- `columns`: Column definitions for the table
-- `data`: Array of data objects to display
-
-**Usage:**
-\`\`\`tsx
-import { DataTable } from "@/components/data-table"
-import type { ColumnDef } from "@tanstack/react-table"
-
-const columns: ColumnDef<any>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  // More columns...
-]
-
-const data = [
-  { name: "John Doe", email: "john@example.com" },
-  // More data...
-]
-
-export default function MyTable() {
-  return <DataTable columns={columns} data={data} />
-}
-\`\`\`
-
-**Features:**
-- Sortable columns
-- Pagination
-- Customizable cell rendering
-- Responsive design
-
-#### `StoreCard`
-**File:** `components/store-card.tsx`
-
-**Purpose:** Displays store information in a card format with rating functionality.
-
-**Props:**
-- `store`: Store object with id, name, address, rating, and userRating properties
-
-**Usage:**
-\`\`\`tsx
-import { StoreCard } from "@/components/store-card"
-
-const store = {
-  id: 1,
-  name: "Store Name",
-  address: "123 Main St",
-  rating: 4.5,
-  userRating: null,
-}
-
-export default function StoreDisplay() {
-  return <StoreCard store={store} />
-}
-\`\`\`
-
-**Features:**
-- Visual display of store information
-- Star rating display
-- User rating submission
-- Gradient background based on store ID
-
-## File Usage
-
-### Page Files
-
-#### `app/page.tsx`
-The landing page of the application. It introduces users to the StoreApp platform and provides links to register or log in.
-
-**Key Features:**
-- Hero section with call-to-action buttons
-- Feature showcase with animated elements
-- Responsive design for all screen sizes
-- Gradient background with decorative elements
-
-#### `app/register/page.tsx`
-User registration page with form validation.
-
-**Key Features:**
-- Form with validation for name, email, address, and password
-- Password strength requirements
-- Error messaging
-- Responsive layout with grid for larger screens
-
-#### `app/login/page.tsx`
-Login page with role-based redirection.
-
-**Key Features:**
-- Email and password authentication
-- Role-based redirection (admin, store owner, user)
-- Password recovery link
-- Animated background elements
-
-#### `app/admin/dashboard/page.tsx`
-Admin dashboard for managing users and stores.
-
-**Key Features:**
-- Search functionality for users and stores
-- Tabbed interface for switching between users and stores
-- Data tables with sorting
-- Statistics cards with animations
-- Add user and add store buttons
-
-#### `app/user/dashboard/page.tsx`
-User dashboard for discovering and rating stores.
-
-**Key Features:**
-- Store cards with rating functionality
-- Search functionality for finding stores
-- Visual feedback for user ratings
-- Responsive grid layout
-
-#### `app/store/dashboard/page.tsx`
-Store owner dashboard for monitoring ratings and performance.
-
-**Key Features:**
-- Rating statistics
-- User reviews table
-- Performance metrics
-- Data visualization
-
-### Utility Files
-
-#### `lib/schema.prisma`
-Prisma schema defining the database structure.
-
-**Key Entities:**
-- User
-- Store
-- Rating
-
-**Relationships:**
-- One-to-many between User and Rating
-- One-to-many between Store and Rating
-- One-to-one between User and Store (for store owners)
-
-#### `lib/utils.ts`
-Utility functions used throughout the application.
-
-**Key Functions:**
-- `cn`: Combines class names with conditional logic
-- Other utility functions for data formatting and manipulation
-
-## Application Flow
-
-### Authentication Flow
-
-1. **Registration**:
-   - User fills out the registration form
-   - Form validation occurs on the client side
-   - On submission, the data is sent to the server
-   - Server creates a new user record in the database
-   - User is redirected to the login page
-
-2. **Login**:
-   - User enters email and password
-   - Credentials are validated against the database
-   - Based on the user's role, they are redirected to the appropriate dashboard:
-     - Admin → `/admin/dashboard`
-     - Store Owner → `/store/dashboard`
-     - Regular User → `/user/dashboard`
-
-### User Flows
-
-#### Admin User Flow
-1. Admin logs in and is directed to the admin dashboard
-2. Admin can:
-   - View all users and stores
-   - Add new users
-   - Add new stores
-   - Search for specific users or stores
-   - View statistics about the platform
-
-#### Store Owner Flow
-1. Store owner logs in and is directed to the store dashboard
-2. Store owner can:
-   - View their store's rating statistics
-   - See individual ratings from users
-   - Update their store profile
-   - Manage store settings
-
-#### Regular User Flow
-1. User logs in and is directed to the user dashboard
-2. User can:
-   - Browse available stores
-   - Search for specific stores
-   - Rate stores they've visited
-   - Update their profile information
-
-## User Roles and Features
-
-### Admin
-- **Dashboard**: Overview of platform statistics
-- **User Management**: Add, view, and manage users
-- **Store Management**: Add, view, and manage stores
-- **Settings**: Configure platform settings
-
-### Store Owner
-- **Dashboard**: View store performance metrics
-- **Ratings**: See detailed ratings from users
-- **Profile**: Update store information
-- **Settings**: Configure store settings
-
-### Regular User
-- **Store Discovery**: Browse and search for stores
-- **Rating**: Rate stores they've visited
-- **Profile**: Update personal information
-- **Settings**: Configure account settings
-
-## Styling and Theming
-
-### Color Palette
-- **Primary Colors**: Teal and Cyan gradients
-- **Secondary Colors**: Sky blue, purple accents
-- **Background**: White/light gray for content areas
-- **Text**: Dark gray for main text, white for text on dark backgrounds
-- **Accents**: Yellow for ratings, green for positive indicators
-
-### UI Components
-The application uses shadcn/ui components, which are built on top of Radix UI and styled with Tailwind CSS. These components provide:
-
-- Consistent styling across the application
-- Accessibility features
-- Dark mode support (when enabled)
-- Responsive design
-
-### Tailwind Configuration
-The `tailwind.config.ts` file extends the default Tailwind configuration with:
-
-- Custom colors for the application's color palette
-- Animation definitions for interactive elements
-- Extended border radius values for consistent rounding
-- Custom shadows for depth and elevation
-
-## Database Schema
-
-### User Table
-- `id`: String (Primary Key, CUID)
-- `name`: String
-- `email`: String (Unique)
-- `password`: String (Hashed)
-- `address`: String
-- `role`: Enum (ADMIN, USER, STORE_OWNER)
-- `createdAt`: DateTime
-- `updatedAt`: DateTime
-
-### Store Table
-- `id`: String (Primary Key, CUID)
-- `name`: String
-- `email`: String (Unique)
-- `address`: String
-- `ownerId`: String (Foreign Key to User)
-- `createdAt`: DateTime
-- `updatedAt`: DateTime
-
-### Rating Table
-- `id`: String (Primary Key, CUID)
-- `value`: Integer (1-5)
-- `userId`: String (Foreign Key to User)
-- `storeId`: String (Foreign Key to Store)
-- `createdAt`: DateTime
-- `updatedAt`: DateTime
-- Unique constraint on `[userId, storeId]` to prevent duplicate ratings
-
-### Relationships
-- A User can have many Ratings
-- A Store can have many Ratings
-- A User (with role STORE_OWNER) can own one Store
-- A Store belongs to one User
-
-## Conclusion
-
-StoreApp is a comprehensive platform for store discovery and rating. With its role-based access control, users can interact with the platform in different ways depending on their role. The application is built with modern web technologies and follows best practices for performance, accessibility, and user experience.
-
-For further assistance or feature requests, please contact the development team.
-\`\`\`
-
-To convert this documentation to a PDF, you have several options:
-
-### Option 1: Use an Online Markdown to PDF Converter
-1. Copy the content above
-2. Visit a website like [MD2PDF](https://md2pdf.netlify.app/) or [Markdown to PDF](https://www.markdowntopdf.com/)
-3. Paste the content and convert to PDF
-
-### Option 2: Use VS Code Extension
-1. Install the "Markdown PDF" extension in VS Code
-2. Open the markdown file
-3. Right-click and select "Markdown PDF: Export (pdf)"
-
-### Option 3: Use Pandoc (Command Line)
-If you're comfortable with command line:
-\`\`\`bash
-# Install pandoc and a PDF engine
-npm install -g pandoc
-# Then convert
-pandoc documentation.md -o storeapp-documentation.pdf
-\`\`\`
-
-### Installation Quick Start
-
-For a quick start, here are the essential commands to get the application running on your local machine:
-
-1. Clone and install dependencies:
-\`\`\`bash
-git clone https://github.com/yourusername/storeapp.git
-cd storeapp
-npm install
-\`\`\`
-
-2. Set up your database (using Neon or any PostgreSQL provider)
-
-3. Create a `.env.local` file with your database connection string:
-\`\`\`
-DATABASE_URL="your-connection-string"
-\`\`\`
-
-4. Run database migrations:
-\`\`\`bash
-npx prisma migrate dev
-\`\`\`
-
-5. Start the development server:
-\`\`\`bash
-npm run dev
-\`\`\`
-
-The application will be available at http://localhost:3000
+│   ├── admin/              # Admin dashboard and management
+│   ├── store/              # Store owner dashboard
+│   ├── user/               # User dashboard and profile
+│   ├── login/              # Authentication pages
+│   ├── register/           
+│   └── page.tsx            # Landing page
+├── components/             # Reusable UI components
+│   ├── layouts/            # Layout components for different user roles
+│   ├── ui/                 # shadcn/ui components
+│   ├── data-table.tsx      # Sortable data table
+│   └── store-card.tsx      # Store display card
+├── lib/                    # Utilities and configurations
+│   ├── schema.prisma       # Database schema
+│   └── utils.ts            # Helper functions
+└── hooks/                  # Custom React hooks
+```
+
+## 🎯 Features
+
+### For Admins
+- **User Management**: Add, view, and manage all users
+- **Store Management**: Add, view, and manage all stores
+- **Platform Analytics**: View comprehensive statistics
+- **Search & Filter**: Find users and stores quickly
+
+### For Store Owners
+- **Performance Dashboard**: Monitor store ratings and reviews
+- **Rating Analytics**: Detailed breakdown of customer feedback
+- **Profile Management**: Update store information
+- **Customer Insights**: View individual user ratings
+
+### For Users
+- **Store Discovery**: Browse and search available stores
+- **Rating System**: Rate stores with 1-5 star system
+- **Profile Management**: Update personal information
+- **Personalized Experience**: Track your ratings and preferences
+
+## 🛠 Technology Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js
+- **Styling**: Tailwind CSS + shadcn/ui
+- **UI Components**: Radix UI primitives
+- **Icons**: Lucide React
+- **Type Safety**: TypeScript
+
+## 🎨 User Interface
+
+The application features a modern, responsive design with:
+- **Role-based layouts** with dedicated sidebars
+- **Interactive data tables** with sorting and pagination
+- **Animated components** for enhanced user experience
+- **Gradient backgrounds** and modern card designs
+- **Mobile-first responsive design**
+
+## 🔐 Authentication & Authorization
+
+### User Roles
+1. **Admin**: Full platform access and management capabilities
+2. **Store Owner**: Store management and analytics access
+3. **User**: Store discovery and rating capabilities
+
+### Role-based Routing
+- Admins → `/admin/dashboard`
+- Store Owners → `/store/dashboard`
+- Users → `/user/dashboard`
+
+## 📊 Database Schema
+
+### Core Entities
+- **Users**: Store user information and roles
+- **Stores**: Store details and ownership
+- **Ratings**: User ratings for stores (1-5 stars)
+
+### Key Relationships
+- Users can rate multiple stores
+- Store owners manage their stores
+- Admins oversee all users and stores
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+npm start
+```
+
+### Deploy to Vercel
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add your environment variables in Vercel dashboard
+4. Deploy automatically on every push
+
+### Environment Variables for Production
+```env
+DATABASE_URL="your-production-database-url"
+NEXTAUTH_SECRET="your-production-secret"
+NEXTAUTH_URL="https://your-domain.com"
+```
+
+## 🧪 Development
+
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npx prisma studio` - Open Prisma database browser
+
+### Code Style
+- ESLint configuration for consistent code style
+- Prettier for code formatting
+- TypeScript for type safety
+- Tailwind CSS for styling
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+- **Desktop**: Full sidebar navigation and data tables
+- **Tablet**: Collapsible navigation and adapted layouts
+- **Mobile**: Mobile-first design with touch-friendly interfaces
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+If you encounter any issues or need help:
+1. Check the [Issues](https://github.com/yourusername/storeapp/issues) page
+2. Create a new issue with detailed information
+3. Contact the development team
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) for the amazing React framework
+- [shadcn/ui](https://ui.shadcn.com/) for beautiful UI components
+- [Prisma](https://prisma.io/) for the excellent database toolkit
+- [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
+
+---
+
+**StoreApp** - Connecting customers with local businesses through ratings and reviews.
+```
+
+This README.md provides comprehensive documentation for your StoreApp project [^1]. It includes:
+
+- **Quick start guide** with step-by-step installation instructions
+- **Project structure** overview for easy navigation
+- **Feature breakdown** by user role (Admin, Store Owner, User)
+- **Technology stack** details
+- **Database schema** explanation
+- **Deployment instructions** for production
+- **Development guidelines** and available scripts
+- **Responsive design** information
+- **Contributing guidelines** for open source collaboration
+
+The README follows best practices by being well-structured, informative, and easy to follow for both developers and users who want to understand or contribute to your project.
